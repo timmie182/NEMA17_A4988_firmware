@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CPS — Đăng nhập</title>
+  <script src="js/auth.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #0f172a;
+      --card:   #131c30;
+      --border: #1e2d45;
+      --blue:   #3b82f6;
+      --red:    #ef4444;
+      --text:   #e2e8f0;
+      --text2:  #94a3b8;
+    }
+
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 24px 16px;
+    }
+
+    /* Logo + Thông tin trường — 2 cột */
+    .school-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logos img {
+      height: 100px;
+      object-fit: contain;
+    }
+
+    .school-info { line-height: 1.7; }
+    .school-info .uni  { font-size: 15px; font-weight: 700; color: var(--text); }
+    .school-info .dept { font-size: 13px; color: var(--text2); }
+
+    /* Tiêu đề */
+    .login-title {
+      text-align: center;
+      font-size: 32px; font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    /* Card form */
+    .login-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 36px;
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    .field label {
+      font-size: 12px; font-weight: 600;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .field input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color .15s;
+      font-family: inherit;
+    }
+    .field input:focus { border-color: var(--blue); }
+
+    .error-msg {
+      font-size: 13px; color: var(--red);
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 7px;
+      padding: 10px 14px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    .btn-login {
+      background: var(--blue);
+      color: #fff; border: none;
+      border-radius: 7px;
+      padding: 12px;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s;
+      font-family: inherit; width: 100%;
+    }
+    .btn-login:hover  { opacity: .88; }
+    .btn-login:active { opacity: .75; }
+
+    /* Thông tin GV / nhóm */
+    .login-meta {
+      text-align: left;
+      color: var(--text2);
+      font-size: 18px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo + Thông tin trường -->
+  <div class="school-row">
+    <div class="logos">
+      <img src="images/LogoHCMUTE.png" alt="Logo HCMUTE" />
+    </div>
+    <div class="school-info">
+      <div class="uni">Ho Chi Minh City University of Technology and Engineering</div>
+      <div class="dept">Faculty of Electrical &amp; Electronics Engineering</div>
+      <div class="dept">Department of Computer &amp; Communications Engineering</div>
+    </div>
+  </div>
+
+  <!-- Tiêu đề -->
+  <div class="login-title">
+    Hệ thống CPS điều khiển động cơ
+  </div>
+
+  <!-- Form đăng nhập -->
+  <div class="login-card">
+    <div class="field">
+      <label for="username">Tên đăng nhập</label>
+      <input type="text" id="username" placeholder="Nhập tên đăng nhập"
+             autocomplete="username" />
+    </div>
+
+    <div class="field">
+      <label for="password">Mật khẩu</label>
+      <input type="password" id="password" placeholder="Nhập mật khẩu"
+             autocomplete="current-password" />
+    </div>
+
+    <div class="error-msg" id="errorMsg">
+      Tên đăng nhập hoặc mật khẩu không đúng
+    </div>
+
+    <button class="btn-login" onclick="handleLogin()">Đăng nhập</button>
+  </div>
+
+  <!-- Thông tin GV / nhóm -->
+  <div class="login-meta">
+    <div>GVHD: ThS. Trịnh Quốc Thanh</div>
+    <div>Thực hiện: Nhóm 5 (Hữu, Kha, Long, Thảo, Thi)</div>
+  </div>
+
+  <script>
+    if (sessionStorage.getItem('cps_auth')) {
+      window.location.href = 'index.html';
+    }
+
+    function handleLogin() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (!login(username, password)) {
+        errorMsg.classList.add('show');
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleLogin();
+    });
+  </script>
+
+</body>
+</html>
